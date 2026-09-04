@@ -1,19 +1,379 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yalan Dünya with Carriee</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dizi & Film Dünyası</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0f0f14;
+      color: white;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 7%;
+      background: rgba(15, 15, 20, 0.95);
+      border-bottom: 1px solid #292932;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      color: #ff4d8d;
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: #ddd;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: #ff4d8d;
+    }
+
+    .hero {
+      padding: 80px 7%;
+      background:
+        linear-gradient(90deg, rgba(15, 15, 20, 1), rgba(15, 15, 20, 0.45)),
+        linear-gradient(135deg, #6a11cb, #ff4d8d, #ff9a44);
+    }
+
+    .hero h1 {
+      max-width: 650px;
+      font-size: clamp(36px, 7vw, 72px);
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      max-width: 560px;
+      color: #f1f1f1;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .hero button {
+      margin-top: 25px;
+      padding: 13px 22px;
+      border: none;
+      border-radius: 25px;
+      background: white;
+      color: #111;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    main {
+      padding: 42px 7%;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 22px;
+    }
+
+    .movie-card {
+      min-height: 285px;
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      cursor: pointer;
+      transition: 0.25s;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .movie-card:hover {
+      transform: translateY(-7px) scale(1.02);
+    }
+
+    .movie-card h3 {
+      font-size: 23px;
+      margin-bottom: 8px;
+    }
+
+    .movie-card p {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .pink {
+      background: linear-gradient(145deg, #ff4d8d, #6a11cb);
+    }
+
+    .blue {
+      background: linear-gradient(145deg, #007cf0, #00dfd8);
+    }
+
+    .orange {
+      background: linear-gradient(145deg, #ff512f, #f09819);
+    }
+
+    .green {
+      background: linear-gradient(145deg, #11998e, #38ef7d);
+    }
+
+    .purple {
+      background: linear-gradient(145deg, #7928ca, #ff0080);
+    }
+
+    .detail {
+      display: none;
+      margin-top: 45px;
+      padding: 30px;
+      background: #1b1b24;
+      border: 1px solid #30303d;
+      border-radius: 20px;
+    }
+
+    .detail.active {
+      display: block;
+    }
+
+    .detail h2 {
+      color: #ff6aa2;
+    }
+
+    .detail-text {
+      color: #cfcfd6;
+      line-height: 1.7;
+    }
+
+    .suggestions {
+      margin: 25px 0;
+    }
+
+    .suggestions span {
+      display: inline-block;
+      background: #30303d;
+      margin: 5px;
+      padding: 9px 14px;
+      border-radius: 20px;
+      color: #f2f2f2;
+    }
+
+    .comment-box {
+      margin-top: 25px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 15px;
+      border: 1px solid #3a3a48;
+      border-radius: 12px;
+      background: #111118;
+      color: white;
+      resize: vertical;
+      outline: none;
+    }
+
+    .comment-box button {
+      margin-top: 10px;
+      padding: 11px 20px;
+      border: none;
+      border-radius: 22px;
+      background: #ff4d8d;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .saved-comment {
+      margin-top: 18px;
+      padding: 15px;
+      background: #272731;
+      border-left: 4px solid #ff4d8d;
+      border-radius: 8px;
+      color: #ddd;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      padding: 35px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 55px;
+        padding-bottom: 55px;
+      }
+
+      .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 13px;
+      }
+
+      .movie-card {
+        min-height: 225px;
+        padding: 15px;
+      }
+
+      .movie-card h3 {
+        font-size: 19px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <h1>Yalan Dünya with Carriee</h1>
-    <p>İzlediğin bütün her şeyi burada bulursunn.</p>
 
-    <h2>Filmlerr with midnight in paris</h2>
-    <p>Yakında burada film önerileri olacak.</p>
+  <header>
+    <div classlk="logo">Renkli Perde</div>
+    <nav>
+      <a href="#filmler">Filmler</a>
+      <a href="#filmler">Diziler</a>
+      <a href="#oneriler">Öneriler</a>
+    </nav>
+  </header>
 
-    <h2>Dizi Önerileri</h2>
-    <p>Yakında burada dizi önerileri olacak.</p>
+  <section class="hero">
+    <h1>Bugün ne izlemek istersin?</h1>
+    <p>
+      Sevdiğin film ve dizileri seç, yorumunu yaz ve sana uygun yeni
+      yapımları keşfet.
+    </p>
+    <button onclick="rastgeleFilm()">Bana bir şey öner</button>
+  </section>
+
+  <main>
+    <section id="filmler">
+      <h2>Sevebileceğin yapımlar</h2>
+
+      <div class="movie-grid">
+        <article class="movie-card pink"
+          onclick="detayAc('La La Land', 'Hayaller, aşk ve seçimler üzerine renkli bir müzikal.', ['About Time', '500 Days of Summer', 'Whiplash'])">
+          <h3>La La Land</h3>
+          <p>Romantik • Müzikal</p>
+        </article>
+
+        <article class="movie-card blue"
+          onclick="detayAc('Interstellar', 'Uzay, zaman ve insan bağlarını anlatan bilim kurgu filmi.', ['Arrival', 'Inception', 'The Martian'])">
+          <h3>Interstellar</h3>
+          <p>Bilim Kurgu • Dram</p>
+        </article>
+
+        <article class="movie-card orange"
+          onclick="detayAc('The Devil Wears Prada', 'Moda dünyasında kariyer, değişim ve seçimler.', ['The Intern', 'Legally Blonde', 'Confessions of a Shopaholic'])">
+          <h3>The Devil Wears Prada</h3>
+          <p>Komedi • Dram</p>
+        </article>
+
+        <article class="movie-card green"
+          onclick="detayAc('Friends', 'Altı arkadaşın eğlenceli ve sıcak hikâyesi.', ['How I Met Your Mother', 'New Girl', 'Brooklyn Nine-Nine'])">
+          <h3>Friends</h3>
+          <p>Komedi • Dizi</p>
+        </article>
+
+        <article class="movie-card purple"
+          onclick="detayAc('Black Mirror', 'Teknolojinin karanlık tarafını anlatan bağımsız hikâyeler.', ['Severance', 'Mr. Robot', 'Love Death + Robots'])">
+          <h3>Black Mirror</h3>
+          <p>Bilim Kurgu • Dizi</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="oneriler" class="detail">
+      <h2 id="detailTitle"></h2>
+      <p id="detailText" class="detail-text"></p>
+
+      <div class="suggestions">
+        <h3>Bunu sevdiysen bunları da sevebilirsin:</h3>
+        <div id="suggestionList"></div>
+      </div>
+
+      <div class="comment-box">
+        <h3>Yorumunu yaz</h3>
+        <textarea id="commentInput"
+          placeholder="Bu yapım hakkında ne düşünüyorsun?"></textarea>
+        <button onclick="yorumKaydet()">Yorumu kaydet</button>
+        <div id="savedComment"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Renkli Perde • Dizi ve film keşif sitesi
+  </footer>
+
+  <script>
+    let seciliFilm = "";
+
+    function detayAc(baslik, aciklama, oneriler) {
+      seciliFilm = baslik;
+
+      document.getElementById("detailTitle").textContent = baslik;
+      document.getElementById("detailText").textContent = aciklama;
+
+      document.getElementById("suggestionList").innerHTML =
+        oneriler.map(film => `<span>${film}</span>`).join("");
+
+      const eskiYorum = localStorage.getItem("yorum-" + baslik);
+
+      document.getElementById("savedComment").innerHTML = eskiYorum
+        ? `<div class="saved-comment">“${eskiYorum}”</div>`
+        : "";
+
+      document.getElementById("commentInput").value = "";
+      document.getElementById("oneriler").classList.add("active");
+      document.getElementById("oneriler").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    function yorumKaydet() {
+      const yorum = document.getElementById("commentInput").value.trim();
+
+      if (!seciliFilm) {
+        alert("Önce bir film veya dizi seç.");
+        return;
+      }
+
+      if (!yorum) {
+        alert("Lütfen bir yorum yaz.");
+        return;
+      }
+
+      localStorage.setItem("yorum-" + seciliFilm, yorum);
+
+      document.getElementById("savedComment").innerHTML =
+        `<div class="saved-comment">“${yorum}”</div>`;
+
+      document.getElementById("commentInput").value = "";
+    }
+
+    function rastgeleFilm() {
+      const kartlar = document.querySelectorAll(".movie-card");
+      const rastgele = Math.floor(Math.random() * kartlar.length);
+      kartlar[rastgele].click();
+    }
+  </script>
+
 </body>
 </html>
