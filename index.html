@@ -2,7 +2,6 @@
 
 <!-- HTML sayfasını başlatır ve sayfanın dilini Türkçe yapar -->
 <html lang="tr">
-
 <head>
   <!-- Türkçe karakterlerin doğru görünmesini sağlar -->
   <meta charset="UTF-8">
@@ -12,6 +11,9 @@
 
   <!-- Tarayıcı sekmesinde görünen isim -->
   <title>Renkli Perde</title>
+
+  <!-- Supabase veritabanıyla bağlantı kurmak için gerekli kütüphane -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     /* Bütün elemanların varsayılan boşluklarını kaldırır */
@@ -228,6 +230,24 @@
       margin-bottom: 10px;
     }
 
+    /* Kullanıcı adı ve puan alanlarının görünüşü */
+    .comment-box input,
+    .comment-box select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 13px;
+      background: #111118;
+      color: white;
+      border: 1px solid #3a3a48;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .comment-box input:focus,
+    .comment-box select:focus {
+      border-color: #ff4d8d;
+    }
+
     /* Yorum yazma kutusu */
     textarea {
       width: 100%;
@@ -271,6 +291,49 @@
       color: #ddd;
       border-left: 4px solid #ff4d8d;
       border-radius: 8px;
+    }
+
+    /* Yorum gönderme işleminin sonucunu gösterir */
+    #commentMessage {
+      min-height: 22px;
+      margin-top: 12px;
+      color: #ff89b4;
+    }
+
+    /* Supabase'den gelen yorumların listesi */
+    #commentsList {
+      margin-top: 25px;
+    }
+
+    /* Her ziyaretçi yorumu için kart */
+    .public-comment {
+      margin-top: 12px;
+      padding: 16px;
+      background: #272731;
+      border-left: 4px solid #ff4d8d;
+      border-radius: 10px;
+    }
+
+    .comment-author {
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .comment-rating {
+      color: #ffc857;
+      letter-spacing: 2px;
+    }
+
+    .comment-text {
+      margin-top: 10px;
+      color: #ddd;
+      line-height: 1.5;
+    }
+
+    .comment-date {
+      margin-top: 10px;
+      color: #888;
+      font-size: 12px;
     }
 
     /* Sayfanın en alt kısmı */
@@ -494,19 +557,41 @@
       <div class="comment-box">
         <h3>Yorumunu yaz</h3>
 
+        <!-- Kullanıcının adını veya rumuzunu alır -->
+        <input
+          id="usernameInput"
+          type="text"
+          maxlength="30"
+          placeholder="Adın veya rumuzun"
+        >
+
+        <!-- Kullanıcının 1 ile 5 arasında puan seçmesini sağlar -->
+        <select id="ratingInput">
+          <option value="">Puan seç</option>
+          <option value="5">★★★★★ – 5</option>
+          <option value="4">★★★★☆ – 4</option>
+          <option value="3">★★★☆☆ – 3</option>
+          <option value="2">★★☆☆☆ – 2</option>
+          <option value="1">★☆☆☆☆ – 1</option>
+        </select>
+
         <!-- Kullanıcının yorum yazacağı alan -->
         <textarea
           id="commentInput"
+          maxlength="500"
           placeholder="Bu yapım hakkında ne düşünüyorsun?"
         ></textarea>
 
-        <!-- Tıklanınca yorumu kaydeder -->
-        <button onclick="yorumKaydet()">
-          Yorumu kaydet
+        <!-- Tıklanınca yorumu Supabase'e gönderir -->
+        <button id="commentButton" onclick="yorumKaydet()">
+          Yorumu gönder
         </button>
 
-        <!-- Kaydedilen yorum burada gösterilir -->
-        <div id="savedComment"></div>
+        <!-- Başarı veya hata mesajını gösterir -->
+        <p id="commentMessage"></p>
+
+        <!-- Herkesin görebildiği yorumları gösterir -->
+        <div id="commentsList"></div>
       </div>
     </section>
   </main>
@@ -517,100 +602,172 @@
   </footer>
 
   <script>
-    // Kullanıcının seçtiği film veya dizinin adını saklar
+    /* Supabase proje adresi ve tarayıcıda kullanılabilen public anahtar */
+    const SUPABASE_URL = "https://gmnhuurnwfguqivoelri.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LY8rkVoKN6juJoUEZZxAjw__aY2L6g7";
+
+    /* Supabase veritabanı bağlantısını oluşturur */
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    /* Kullanıcının seçtiği film veya dizinin adını saklar */
     let seciliFilm = "";
 
-    // Bir film kartına tıklandığında çalışan fonksiyon
-    function detayAc(baslik, aciklama, oneriler) {
-      // Seçilen filmin adını değişkende saklar
+    /* Film kartına basıldığında detayları ve ortak yorumları gösterir */
+    async function detayAc(baslik, aciklama, oneriler) {
       seciliFilm = baslik;
 
-      // Film adını detay başlığına yazar
-      document.getElementById("detailTitle").textContent =
-        baslik;
+      document.getElementById("detailTitle").textContent = baslik;
+      document.getElementById("detailText").textContent = aciklama;
 
-      // Film açıklamasını detay bölümüne yazar
-      document.getElementById("detailText").textContent =
-        aciklama;
-
-      // Benzer yapımları ayrı etiketlere dönüştürür
+      /* Benzer yapımları ayrı etiketler hâlinde gösterir */
       document.getElementById("suggestionList").innerHTML =
-        oneriler
-          .map(film => `<span>${film}</span>`)
-          .join("");
+        oneriler.map(film => `<span>${film}</span>`).join("");
 
-      // Bu film için daha önce kaydedilmiş yorumu getirir
-      const eskiYorum =
-        localStorage.getItem("yorum-" + baslik);
-
-      // Eski yorum varsa gösterir, yoksa alanı boş bırakır
-      document.getElementById("savedComment").innerHTML =
-        eskiYorum
-          ? `<div class="saved-comment">“${eskiYorum}”</div>`
-          : "";
-
-      // Yorum yazma kutusunu temizler
+      document.getElementById("commentMessage").textContent = "";
       document.getElementById("commentInput").value = "";
+      document.getElementById("oneriler").classList.add("active");
 
-      // Gizli detay bölümünü görünür yapar
-      document
-        .getElementById("oneriler")
-        .classList.add("active");
+      /* Seçilen filme ait yorumları veritabanından getirir */
+      await yorumlariGetir();
 
-      // Sayfayı yumuşak biçimde detay bölümüne kaydırır
-      document
-        .getElementById("oneriler")
-        .scrollIntoView({
-          behavior: "smooth"
-        });
+      document.getElementById("oneriler").scrollIntoView({
+        behavior: "smooth"
+      });
     }
 
-    // Yorum kaydetme butonuna basıldığında çalışır
-    function yorumKaydet() {
-      // Yorum kutusundaki yazıyı alır
-      const yorum =
-        document
-          .getElementById("commentInput")
-          .value
-          .trim();
+    /* Kullanıcının yazdığı yorumu Supabase'e kaydeder */
+    async function yorumKaydet() {
+      const kullaniciAdi = document
+        .getElementById("usernameInput")
+        .value
+        .trim();
 
-      // Film seçilmediyse uyarı gösterir
-      if (!seciliFilm) {
-        alert("Önce bir film veya dizi seç.");
-        return;
-      }
-
-      // Yorum kutusu boşsa uyarı gösterir
-      if (!yorum) {
-        alert("Lütfen bir yorum yaz.");
-        return;
-      }
-
-      // Yorumu kullanıcının kendi tarayıcısına kaydeder
-      localStorage.setItem(
-        "yorum-" + seciliFilm,
-        yorum
+      const puan = Number(
+        document.getElementById("ratingInput").value
       );
 
-      // Kaydedilen yorumu sayfada gösterir
-      document.getElementById("savedComment").innerHTML =
-        `<div class="saved-comment">“${yorum}”</div>`;
+      const yorum = document
+        .getElementById("commentInput")
+        .value
+        .trim();
 
-      // Yorum kutusunu temizler
+      const mesaj = document.getElementById("commentMessage");
+      const buton = document.getElementById("commentButton");
+
+      /* Kullanıcı girdilerini kontrol eder */
+      if (!seciliFilm) {
+        mesaj.textContent = "Önce bir film veya dizi seçmelisin.";
+        return;
+      }
+
+      if (kullaniciAdi.length < 2 || kullaniciAdi.length > 30) {
+        mesaj.textContent = "Ad veya rumuz 2–30 karakter arasında olmalı.";
+        return;
+      }
+
+      if (puan < 1 || puan > 5) {
+        mesaj.textContent = "Lütfen 1 ile 5 arasında bir puan seç.";
+        return;
+      }
+
+      if (yorum.length < 2 || yorum.length > 500) {
+        mesaj.textContent = "Yorum 2–500 karakter arasında olmalı.";
+        return;
+      }
+
+      /* Gönderim sırasında butona tekrar basılmasını engeller */
+      buton.disabled = true;
+      buton.textContent = "Gönderiliyor...";
+
+      /* Yorumu comments tablosuna ekler */
+      const { error } = await db.from("comments").insert({
+        movie_name: seciliFilm,
+        username: kullaniciAdi,
+        comment_text: yorum,
+        rating: puan
+      });
+
+      if (error) {
+        console.error(error);
+        mesaj.textContent = "Yorum gönderilemedi. Supabase ayarlarını kontrol et.";
+        buton.disabled = false;
+        buton.textContent = "Yorumu gönder";
+        return;
+      }
+
+      /* Başarılı gönderimden sonra formu temizler */
+      mesaj.textContent = "Yorumun başarıyla gönderildi.";
       document.getElementById("commentInput").value = "";
+      document.getElementById("ratingInput").value = "";
+
+      /* Yeni yorumu göstermek için listeyi tekrar yükler */
+      await yorumlariGetir();
+
+      buton.disabled = false;
+      buton.textContent = "Yorumu gönder";
     }
 
-    // Rastgele öneri butonuna basıldığında çalışır
+    /* Seçilen filme ait herkesin yorumlarını getirir */
+    async function yorumlariGetir() {
+      const yorumListesi = document.getElementById("commentsList");
+      yorumListesi.textContent = "Yorumlar yükleniyor...";
+
+      const { data, error } = await db
+        .from("comments")
+        .select("id, username, comment_text, rating, created_at")
+        .eq("movie_name", seciliFilm)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(error);
+        yorumListesi.textContent = "Yorumlar yüklenemedi.";
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        yorumListesi.textContent = "Henüz yorum yok. İlk yorumu sen yaz!";
+        return;
+      }
+
+      yorumListesi.innerHTML = "";
+
+      /* Her yorum için güvenli HTML elemanları oluşturur */
+      data.forEach(yorum => {
+        const yorumKutusu = document.createElement("article");
+        yorumKutusu.className = "public-comment";
+
+        const yazar = document.createElement("div");
+        yazar.className = "comment-author";
+        yazar.textContent = yorum.username;
+
+        const yildiz = document.createElement("div");
+        yildiz.className = "comment-rating";
+        yildiz.textContent =
+          "★".repeat(yorum.rating) + "☆".repeat(5 - yorum.rating);
+
+        const metin = document.createElement("p");
+        metin.className = "comment-text";
+        metin.textContent = yorum.comment_text;
+
+        const tarih = document.createElement("div");
+        tarih.className = "comment-date";
+        tarih.textContent = new Date(yorum.created_at).toLocaleString("tr-TR");
+
+        yorumKutusu.appendChild(yazar);
+        yorumKutusu.appendChild(yildiz);
+        yorumKutusu.appendChild(metin);
+        yorumKutusu.appendChild(tarih);
+        yorumListesi.appendChild(yorumKutusu);
+      });
+    }
+
+    /* Rastgele bir film veya dizi seçer */
     function rastgeleFilm() {
-      // Sayfadaki bütün film kartlarını bulur
-      const kartlar =
-        document.querySelectorAll(".movie-card");
-
-      // Film kartlarının arasından rastgele bir sayı seçer
-      const rastgele =
-        Math.floor(Math.random() * kartlar.length);
-
-      // Rastgele seçilen film kartına otomatik tıklar
+      const kartlar = document.querySelectorAll(".movie-card");
+      const rastgele = Math.floor(Math.random() * kartlar.length);
       kartlar[rastgele].click();
     }
   </script>
