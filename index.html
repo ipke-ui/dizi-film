@@ -1,17 +1,27 @@
 <!DOCTYPE html>
+
+<!-- HTML sayfasını başlatır ve sayfanın dilini Türkçe yapar -->
 <html lang="tr">
+
 <head>
+  <!-- Türkçe karakterlerin doğru görünmesini sağlar -->
   <meta charset="UTF-8">
+
+  <!-- Siteyi telefon ekranlarına uyumlu yapar -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tarayıcı sekmesinde görünen isim -->
   <title>Renkli Perde</title>
 
   <style>
+    /* Bütün elemanların varsayılan boşluklarını kaldırır */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    /* Sayfanın genel görünüşü */
     body {
       min-height: 100vh;
       background: #0f0f14;
@@ -19,6 +29,7 @@
       font-family: Arial, sans-serif;
     }
 
+    /* Üst menü */
     header {
       position: sticky;
       top: 0;
@@ -31,22 +42,26 @@
       border-bottom: 1px solid #292932;
     }
 
+    /* Sitenin logosu */
     .logo {
       color: #ff4d8d;
       font-size: 25px;
       font-weight: bold;
     }
 
+    /* Menü bağlantıları */
     nav a {
       margin-left: 20px;
       color: #ddd;
       text-decoration: none;
     }
 
+    /* Fare menü bağlantısının üzerine gelince çalışır */
     nav a:hover {
       color: #ff4d8d;
     }
 
+    /* Büyük karşılama alanı */
     .hero {
       padding: 80px 7%;
       background:
@@ -63,12 +78,14 @@
         );
     }
 
+    /* Büyük ana başlık */
     .hero h1 {
       max-width: 650px;
       margin-bottom: 16px;
       font-size: clamp(36px, 7vw, 72px);
     }
 
+    /* Ana başlığın altındaki açıklama */
     .hero p {
       max-width: 560px;
       color: #f1f1f1;
@@ -76,6 +93,7 @@
       line-height: 1.6;
     }
 
+    /* Rastgele öneri butonu */
     .hero button {
       margin-top: 25px;
       padding: 13px 22px;
@@ -89,86 +107,74 @@
       transition: 0.2s;
     }
 
+    /* Fare butonun üzerine gelince rengini değiştirir */
     .hero button:hover {
       background: #ff4d8d;
       color: white;
     }
 
+    /* Sayfanın ana içeriği */
     main {
       padding: 42px 7%;
     }
 
+    /* Bölüm başlıkları */
     h2 {
       margin-bottom: 20px;
     }
 
+    /* Film kartlarını yan yana dizer */
     .movie-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 22px;
     }
 
+    /* Her film kartının ortak görünüşü */
     .movie-card {
-      min-height: 330px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
       overflow: hidden;
       background: #1b1b24;
+      border: 1px solid #292934;
       border-radius: 18px;
       cursor: pointer;
       transition: 0.25s;
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
     }
 
+    /* Fare kartın üzerine gelince kartı hareket ettirir */
     .movie-card:hover {
       transform: translateY(-7px) scale(1.02);
       box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
     }
 
+    /* Film posterlerinin görünüşü */
     .movie-card img {
       width: 100%;
-      height: 270px;
+      height: 290px;
       display: block;
       object-fit: cover;
+      background: #292934;
     }
 
+    /* Film adı ve türünün bulunduğu alan */
     .movie-info {
-      min-height: 90px;
+      min-height: 95px;
       padding: 17px;
     }
 
+    /* Film adları */
     .movie-info h3 {
       margin-bottom: 8px;
       font-size: 21px;
     }
 
+    /* Film türleri */
     .movie-info p {
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.72);
       font-size: 14px;
     }
 
-    .poster-placeholder {
-      height: 270px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 25px;
-      font-size: 55px;
-    }
-
-    .pink {
-      background: linear-gradient(145deg, #ff4d8d, #6a11cb);
-    }
-
-    .blue {
-      background: linear-gradient(145deg, #007cf0, #00dfd8);
-    }
-
-    .orange {
-      background: linear-gradient(145deg, #ff512f, #f09819);
-    }
-
+    /* Başlangıçta gizli olan detay kutusu */
     .detail {
       display: none;
       margin-top: 45px;
@@ -178,19 +184,23 @@
       border-radius: 20px;
     }
 
+    /* Film seçilince detay kutusunu gösterir */
     .detail.active {
       display: block;
     }
 
+    /* Detay bölümündeki film adı */
     .detail h2 {
       color: #ff6aa2;
     }
 
+    /* Detay bölümündeki açıklama */
     .detail-text {
       color: #cfcfd6;
       line-height: 1.7;
     }
 
+    /* Benzer yapımlar bölümü */
     .suggestions {
       margin: 25px 0;
     }
@@ -199,6 +209,7 @@
       margin-bottom: 10px;
     }
 
+    /* Benzer yapımların küçük etiketleri */
     .suggestions span {
       display: inline-block;
       margin: 5px;
@@ -208,6 +219,7 @@
       border-radius: 20px;
     }
 
+    /* Yorum bölümü */
     .comment-box {
       margin-top: 25px;
     }
@@ -216,6 +228,7 @@
       margin-bottom: 10px;
     }
 
+    /* Yorum yazma kutusu */
     textarea {
       width: 100%;
       min-height: 100px;
@@ -228,10 +241,12 @@
       outline: none;
     }
 
+    /* Yorum kutusuna tıklanınca kenarını pembe yapar */
     textarea:focus {
       border-color: #ff4d8d;
     }
 
+    /* Yorum kaydetme butonu */
     .comment-box button {
       margin-top: 10px;
       padding: 11px 20px;
@@ -243,10 +258,12 @@
       cursor: pointer;
     }
 
+    /* Fare yorum butonunun üzerine gelince çalışır */
     .comment-box button:hover {
       background: #df3473;
     }
 
+    /* Kaydedilen yorumun görünüşü */
     .saved-comment {
       margin-top: 18px;
       padding: 15px;
@@ -256,45 +273,49 @@
       border-radius: 8px;
     }
 
+    /* Sayfanın en alt kısmı */
     footer {
       padding: 35px;
       color: #777;
       text-align: center;
     }
 
+    /* Ekran 600 pikselden küçükse bu kurallar çalışır */
     @media (max-width: 600px) {
+      /* Telefonda menüyü gizler */
       nav {
         display: none;
       }
 
+      /* Telefonda karşılama alanını küçültür */
       .hero {
         padding-top: 55px;
         padding-bottom: 55px;
       }
 
+      /* Telefonda kartları iki sütun hâlinde gösterir */
       .movie-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 13px;
       }
 
-      .movie-card {
-        min-height: 275px;
+      /* Telefonda posterlerin yüksekliğini küçültür */
+      .movie-card img {
+        height: 220px;
       }
 
-      .movie-card img,
-      .poster-placeholder {
-        height: 210px;
-      }
-
+      /* Telefonda film bilgisi alanını küçültür */
       .movie-info {
-        min-height: 85px;
+        min-height: 90px;
         padding: 13px;
       }
 
+      /* Telefonda film adını küçültür */
       .movie-info h3 {
         font-size: 17px;
       }
 
+      /* Telefonda film türünü küçültür */
       .movie-info p {
         font-size: 13px;
       }
@@ -304,9 +325,12 @@
 
 <body>
 
+  <!-- Sitenin üst menüsü -->
   <header>
+    <!-- Sitenin adı -->
     <div class="logo">🎬 Renkli Perde</div>
 
+    <!-- Sayfa içindeki bölümlere giden bağlantılar -->
     <nav>
       <a href="#filmler">Filmler</a>
       <a href="#filmler">Diziler</a>
@@ -314,6 +338,7 @@
     </nav>
   </header>
 
+  <!-- Sitenin büyük karşılama alanı -->
   <section class="hero">
     <h1>Bugün ne izlemek istersin?</h1>
 
@@ -322,17 +347,21 @@
       yeni yapımları keşfet.
     </p>
 
+    <!-- Tıklanınca rastgele bir film kartı seçer -->
     <button onclick="rastgeleFilm()">
       Bana bir şey öner
     </button>
   </section>
 
+  <!-- Ana içerik -->
   <main>
     <section id="filmler">
       <h2>Sevebileceğin yapımlar</h2>
 
+      <!-- Bütün film kartlarını taşıyan alan -->
       <div class="movie-grid">
 
+        <!-- LA LA LAND KARTI -->
         <article
           class="movie-card"
           onclick="detayAc(
@@ -341,14 +370,20 @@
             ['About Time', '500 Days of Summer', 'Whiplash']
           )"
         >
-          <div class="poster-placeholder pink">🎵</div>
+          <!-- La La Land posterini gösterir -->
+          <img
+            src="la-la-land.jpg"
+            alt="La La Land film posteri"
+          >
 
+          <!-- Film adı ve türü -->
           <div class="movie-info">
             <h3>La La Land</h3>
             <p>Romantik • Müzikal</p>
           </div>
         </article>
 
+        <!-- INTERSTELLAR KARTI -->
         <article
           class="movie-card"
           onclick="detayAc(
@@ -357,14 +392,20 @@
             ['Arrival', 'Inception', 'The Martian']
           )"
         >
-          <div class="poster-placeholder blue">🚀</div>
+          <!-- Interstellar posterini gösterir -->
+          <img
+            src="interstellar.jpg"
+            alt="Interstellar film posteri"
+          >
 
+          <!-- Film adı ve türü -->
           <div class="movie-info">
             <h3>Interstellar</h3>
             <p>Bilim Kurgu • Dram</p>
           </div>
         </article>
 
+        <!-- THE DEVIL WEARS PRADA KARTI -->
         <article
           class="movie-card"
           onclick="detayAc(
@@ -373,14 +414,20 @@
             ['The Intern', 'Legally Blonde', 'Confessions of a Shopaholic']
           )"
         >
-          <div class="poster-placeholder orange">👠</div>
+          <!-- The Devil Wears Prada posterini gösterir -->
+          <img
+            src="devil-wears-prada.jpg"
+            alt="The Devil Wears Prada film posteri"
+          >
 
+          <!-- Film adı ve türü -->
           <div class="movie-info">
             <h3>The Devil Wears Prada</h3>
             <p>Komedi • Dram</p>
           </div>
         </article>
 
+        <!-- FRIENDS KARTI -->
         <article
           class="movie-card"
           onclick="detayAc(
@@ -389,17 +436,20 @@
             ['How I Met Your Mother', 'New Girl', 'Brooklyn Nine-Nine']
           )"
         >
+          <!-- Friends posterini gösterir -->
           <img
-            src="images/friends.jpg"
+            src="friends.jpg"
             alt="Friends dizisi posteri"
           >
 
+          <!-- Dizi adı ve türü -->
           <div class="movie-info">
             <h3>Friends</h3>
             <p>Komedi • Dizi</p>
           </div>
         </article>
 
+        <!-- BLACK MIRROR KARTI -->
         <article
           class="movie-card"
           onclick="detayAc(
@@ -408,11 +458,13 @@
             ['Severance', 'Mr. Robot', 'Love Death + Robots']
           )"
         >
+          <!-- Black Mirror posterini gösterir -->
           <img
-            src="images/black-mirror.jpg"
+            src="black-mirror.jpg"
             alt="Black Mirror dizisi posteri"
           >
 
+          <!-- Dizi adı ve türü -->
           <div class="movie-info">
             <h3>Black Mirror</h3>
             <p>Bilim Kurgu • Dizi</p>
@@ -422,68 +474,90 @@
       </div>
     </section>
 
+    <!-- Bir film seçildiğinde açılacak detay bölümü -->
     <section id="oneriler" class="detail">
+      <!-- Seçilen film adı JavaScript tarafından buraya yazılır -->
       <h2 id="detailTitle"></h2>
 
+      <!-- Seçilen filmin açıklaması buraya yazılır -->
       <p id="detailText" class="detail-text"></p>
 
+      <!-- Benzer yapımlar bölümü -->
       <div class="suggestions">
         <h3>Bunu sevdiysen bunları da sevebilirsin:</h3>
+
+        <!-- Öneriler JavaScript tarafından buraya eklenir -->
         <div id="suggestionList"></div>
       </div>
 
+      <!-- Yorum yazma bölümü -->
       <div class="comment-box">
         <h3>Yorumunu yaz</h3>
 
+        <!-- Kullanıcının yorum yazacağı alan -->
         <textarea
           id="commentInput"
           placeholder="Bu yapım hakkında ne düşünüyorsun?"
         ></textarea>
 
+        <!-- Tıklanınca yorumu kaydeder -->
         <button onclick="yorumKaydet()">
           Yorumu kaydet
         </button>
 
+        <!-- Kaydedilen yorum burada gösterilir -->
         <div id="savedComment"></div>
       </div>
     </section>
   </main>
 
+  <!-- Sayfanın alt bölümü -->
   <footer>
     Renkli Perde • Dizi ve film keşif sitesi
   </footer>
 
   <script>
+    // Kullanıcının seçtiği film veya dizinin adını saklar
     let seciliFilm = "";
 
+    // Bir film kartına tıklandığında çalışan fonksiyon
     function detayAc(baslik, aciklama, oneriler) {
+      // Seçilen filmin adını değişkende saklar
       seciliFilm = baslik;
 
+      // Film adını detay başlığına yazar
       document.getElementById("detailTitle").textContent =
         baslik;
 
+      // Film açıklamasını detay bölümüne yazar
       document.getElementById("detailText").textContent =
         aciklama;
 
+      // Benzer yapımları ayrı etiketlere dönüştürür
       document.getElementById("suggestionList").innerHTML =
         oneriler
           .map(film => `<span>${film}</span>`)
           .join("");
 
+      // Bu film için daha önce kaydedilmiş yorumu getirir
       const eskiYorum =
         localStorage.getItem("yorum-" + baslik);
 
+      // Eski yorum varsa gösterir, yoksa alanı boş bırakır
       document.getElementById("savedComment").innerHTML =
         eskiYorum
           ? `<div class="saved-comment">“${eskiYorum}”</div>`
           : "";
 
+      // Yorum yazma kutusunu temizler
       document.getElementById("commentInput").value = "";
 
+      // Gizli detay bölümünü görünür yapar
       document
         .getElementById("oneriler")
         .classList.add("active");
 
+      // Sayfayı yumuşak biçimde detay bölümüne kaydırır
       document
         .getElementById("oneriler")
         .scrollIntoView({
@@ -491,41 +565,52 @@
         });
     }
 
+    // Yorum kaydetme butonuna basıldığında çalışır
     function yorumKaydet() {
+      // Yorum kutusundaki yazıyı alır
       const yorum =
         document
           .getElementById("commentInput")
           .value
           .trim();
 
+      // Film seçilmediyse uyarı gösterir
       if (!seciliFilm) {
         alert("Önce bir film veya dizi seç.");
         return;
       }
 
+      // Yorum kutusu boşsa uyarı gösterir
       if (!yorum) {
         alert("Lütfen bir yorum yaz.");
         return;
       }
 
+      // Yorumu kullanıcının kendi tarayıcısına kaydeder
       localStorage.setItem(
         "yorum-" + seciliFilm,
         yorum
       );
 
+      // Kaydedilen yorumu sayfada gösterir
       document.getElementById("savedComment").innerHTML =
         `<div class="saved-comment">“${yorum}”</div>`;
 
+      // Yorum kutusunu temizler
       document.getElementById("commentInput").value = "";
     }
 
+    // Rastgele öneri butonuna basıldığında çalışır
     function rastgeleFilm() {
+      // Sayfadaki bütün film kartlarını bulur
       const kartlar =
         document.querySelectorAll(".movie-card");
 
+      // Film kartlarının arasından rastgele bir sayı seçer
       const rastgele =
         Math.floor(Math.random() * kartlar.length);
 
+      // Rastgele seçilen film kartına otomatik tıklar
       kartlar[rastgele].click();
     }
   </script>
