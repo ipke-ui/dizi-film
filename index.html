@@ -320,8 +320,52 @@
     }
 
     .comment-rating {
-      color: #ffc857;
-      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #ff89b4;
+      font-weight: bold;
+    }
+
+    /* Beş kalbin bulunduğu alan */
+    .heart-picker,
+    .heart-visual {
+      position: relative;
+      display: inline-block;
+      color: #555563;
+      font-size: 36px;
+      line-height: 1;
+      letter-spacing: 4px;
+      white-space: nowrap;
+    }
+
+    /* Puan verirken kalplerin tıklanabilmesini sağlar */
+    .heart-picker {
+      margin: 10px 0 7px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Altta görünen boş kalpler */
+    .heart-empty {
+      color: #555563;
+    }
+
+    /* Üstteki pembe kalpler; genişliği puana göre değişir */
+    .heart-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      overflow: hidden;
+      color: #ff4d8d;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* Yorum listesindeki kalpler biraz daha küçük olsun */
+    .comment-rating .heart-visual {
+      font-size: 22px;
     }
 
     .comment-text {
@@ -565,17 +609,21 @@
           placeholder="Adın veya rumuzun"
         >
 
-        <!-- Kullanıcının 0.25 aralıklarla puan vermesini sağlar -->
-<label for="ratingInput">Puanın (0.25–5.00)</label>
+        <!-- Kalbin neresine basılırsa puanı 0.25 aralıklarla hesaplar -->
+        <label>Puanın</label>
+        <div
+          id="heartPicker"
+          class="heart-picker"
+          onclick="kalpPuaniSec(event)"
+          title="Puan vermek için kalplerin üzerine tıkla"
+        >
+          <span class="heart-empty">♥♥♥♥♥</span>
+          <span id="heartPickerFill" class="heart-fill">♥♥♥♥♥</span>
+        </div>
 
-<input
-  id="ratingInput"
-  type="number"
-  min="0.25"
-  max="5"
-  step="0.25"
-  placeholder="Örneğin: 4.25"
->
+        <!-- Seçilen sayısal puanı JavaScript burada saklar -->
+        <input id="ratingInput" type="hidden" value="">
+        <div id="ratingValue">Puan seçmek için kalplere tıkla</div>
 
         <!-- Kullanıcının yorum yazacağı alan -->
         <textarea
@@ -616,6 +664,27 @@
 
     /* Kullanıcının seçtiği film veya dizinin adını saklar */
     let seciliFilm = "";
+
+    /* Kalplerin tıklanan konumunu 0.25 aralıklı puana çevirir */
+    function kalpPuaniSec(event) {
+      const kalpler = document.getElementById("heartPicker");
+      const konum = kalpler.getBoundingClientRect();
+      const oran = (event.clientX - konum.left) / konum.width;
+
+      /* Sonucu en yakın üst çeyrek puana yuvarlar */
+      const puan = Math.min(5, Math.max(0.25, Math.ceil(oran * 20) / 4));
+
+      document.getElementById("ratingInput").value = puan;
+      kalpleriGuncelle(puan);
+    }
+
+    /* Seçilen puan kadar kalbin pembe görünmesini sağlar */
+    function kalpleriGuncelle(puan) {
+      const doluluk = (puan / 5) * 100;
+      document.getElementById("heartPickerFill").style.width = doluluk + "%";
+      document.getElementById("ratingValue").textContent =
+        puan > 0 ? puan.toFixed(2) + " / 5" : "Puan seçmek için kalplere tıkla";
+    }
 
     /* Film kartına basıldığında detayları ve ortak yorumları gösterir */
     async function detayAc(baslik, aciklama, oneriler) {
@@ -705,6 +774,7 @@
       mesaj.textContent = "Yorumun başarıyla gönderildi.";
       document.getElementById("commentInput").value = "";
       document.getElementById("ratingInput").value = "";
+      kalpleriGuncelle(0);
 
       /* Yeni yorumu göstermek için listeyi tekrar yükler */
       await yorumlariGetir();
@@ -748,9 +818,22 @@
 
         const yildiz = document.createElement("div");
         yildiz.className = "comment-rating";
-        /* Ondalıklı puanları örneğin 4.25 / 5 ★ şeklinde gösterir */
-        yildiz.textContent =
-          `${Number(yorum.rating).toFixed(2)} / 5 ★`;
+
+        /* Kaydedilen puana göre kalplerin ne kadar dolacağını hesaplar */
+        const yorumPuani = Number(yorum.rating);
+        const kalpGorunumu = document.createElement("span");
+        kalpGorunumu.className = "heart-visual";
+        kalpGorunumu.innerHTML =
+          '<span class="heart-empty">♥♥♥♥♥</span>' +
+          '<span class="heart-fill">♥♥♥♥♥</span>';
+        kalpGorunumu.querySelector(".heart-fill").style.width =
+          (yorumPuani / 5) * 100 + "%";
+
+        const puanYazisi = document.createElement("span");
+        puanYazisi.textContent = yorumPuani.toFixed(2) + " / 5";
+
+        yildiz.appendChild(kalpGorunumu);
+        yildiz.appendChild(puanYazisi);
 
         const metin = document.createElement("p");
         metin.className = "comment-text";
