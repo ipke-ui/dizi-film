@@ -565,15 +565,17 @@
           placeholder="Adın veya rumuzun"
         >
 
-        <!-- Kullanıcının 1 ile 5 arasında puan seçmesini sağlar -->
-        <select id="ratingInput">
-          <option value="">Puan seç</option>
-          <option value="5">★★★★★ – 5</option>
-          <option value="4">★★★★☆ – 4</option>
-          <option value="3">★★★☆☆ – 3</option>
-          <option value="2">★★☆☆☆ – 2</option>
-          <option value="1">★☆☆☆☆ – 1</option>
-        </select>
+        <!-- Kullanıcının 0.25 aralıklarla puan vermesini sağlar -->
+<label for="ratingInput">Puanın (0.25–5.00)</label>
+
+<input
+  id="ratingInput"
+  type="number"
+  min="0.25"
+  max="5"
+  step="0.25"
+  placeholder="Örneğin: 4.25"
+>
 
         <!-- Kullanıcının yorum yazacağı alan -->
         <textarea
@@ -668,8 +670,9 @@
         return;
       }
 
-      if (puan < 1 || puan > 5) {
-        mesaj.textContent = "Lütfen 1 ile 5 arasında bir puan seç.";
+      /* 0.25, 0.50, 0.75 gibi çeyrek puanları kabul eder */
+      if (puan < 0.25 || puan > 5 || !Number.isInteger(puan * 4)) {
+        mesaj.textContent = "Lütfen 0.25 ile 5 arasında, 0.25 aralıklarla puan gir.";
         return;
       }
 
@@ -745,8 +748,9 @@
 
         const yildiz = document.createElement("div");
         yildiz.className = "comment-rating";
+        /* Ondalıklı puanları örneğin 4.25 / 5 ★ şeklinde gösterir */
         yildiz.textContent =
-          "★".repeat(yorum.rating) + "☆".repeat(5 - yorum.rating);
+          `${Number(yorum.rating).toFixed(2)} / 5 ★`;
 
         const metin = document.createElement("p");
         metin.className = "comment-text";
