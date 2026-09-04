@@ -1,493 +1,9 @@
-Şimdi fotoğrafları film kartlarına bağlayacağız.
-
-1. index.html dosyasını düzenle
-
-GitHub’da index.html dosyasını açıp kalem simgesine bas.
-
-Friends kartını bul:
-
-<div class="film-karti green">
-
-Bu satırın hemen altına ekle:
-
-<img src="images/friends.jpg" alt="Friends">
-
-Black Mirror kartında da:
-
-<div class="film-karti purple">
-
-satırının hemen altına ekle:
-
-<img src="images/black-mirror.jpg" alt="Black Mirror">
-
-Kartlar yaklaşık şöyle görünmeli:
-
-<div class="film-karti green">
-  <img src="images/friends.jpg" alt="Friends">
-  <h3>Friends</h3>
-  <p>Komedi • Dizi</p>
-</div>
-2. Fotoğrafların görünüşünü düzelt
-
-Kodun yukarısındaki <style> bölümüne şunu ekle:
-
-.film-karti img {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 14px;
-  margin-bottom: 15px;
-}
-
-Açıklaması:
-
-width: 100%: Görseli kart genişliğine getirir.
-height: 280px: Bütün posterleri aynı yükseklikte gösterir.
-object-fit: cover: Görseli ezmeden alana yerleştirir.
-border-radius: Köşeleri yuvarlatır.
-margin-bottom: Fotoğrafla film adı arasında boşluk bırakır.
-
-Son olarak Commit changes yap. 1–2 dakika sonra sitene girip Ctrl + F5 ile yenile. Dosya adları kodda ve GitHub’da birebir aynı olmalı.
-
-
-        <article class="movie-card green"
-          onclick="detayAc('Friends', 'Altı arkadaşın eğlenceli ve sıcak hikâyesi.', ['How I Met Your Mother', 'New Girl', 'Brooklyn Nine-Nine'])">
-          <h3>Friends</h3>
-          <p>Komedi • Dizi</p>
-        </article>
-
-Senin kodunda sınıf adı movie-card. Friends fotoğrafını açılış satırının hemen altına ekle. Son hâli şöyle olmalı:
-
-<article class="movie-card green"
-  onclick="detayAc(
-    'Friends',
-    'Altı arkadaşın eğlenceli ve sıcak hikâyesi.',
-    ['How I Met Your Mother', 'New Girl', 'Brooklyn Nine-Nine']
-  )">
-
-  <img src="images/friends.jpg" alt="Friends dizisi posteri">
-
-  <h3>Friends</h3>
-  <p>Komedi • Dizi</p>
-</article>
-
-Ardından <style> bölümünün içine şu kodu ekle:
-
-.movie-card img {
-  width: 100%;
-  height: 260px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 15px;
-}
-
-Burada:
-
-src="images/friends.jpg" resmin GitHub’daki konumudur.
-alt resim açılmazsa gösterilecek açıklamadır.
-width: 100% resmi kart genişliğine getirir.
-height: 260px poster yüksekliğini belirler.
-object-fit: cover resmi bozmadan yerleştirir.
-
-Sonra Commit changes yap ve siteyi Ctrl + F5 ile yenile.
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dizi & Film Dünyası</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: #0f0f14;
-      color: white;
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 22px 7%;
-      background: rgba(15, 15, 20, 0.95);
-      border-bottom: 1px solid #292932;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      color: #ff4d8d;
-      font-size: 25px;
-      font-weight: bold;
-    }
-
-    nav a {
-      color: #ddd;
-      margin-left: 20px;
-      text-decoration: none;
-    }
-
-    nav a:hover {
-      color: #ff4d8d;
-    }
-
-    .hero {
-      padding: 80px 7%;
-      background:
-        linear-gradient(90deg, rgba(15, 15, 20, 1), rgba(15, 15, 20, 0.45)),
-        linear-gradient(135deg, #6a11cb, #ff4d8d, #ff9a44);
-    }
-
-    .hero h1 {
-      max-width: 650px;
-      font-size: clamp(36px, 7vw, 72px);
-      margin-bottom: 16px;
-    }
-
-    .hero p {
-      max-width: 560px;
-      color: #f1f1f1;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .hero button {
-      margin-top: 25px;
-      padding: 13px 22px;
-      border: none;
-      border-radius: 25px;
-      background: white;
-      color: #111;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    main {
-      padding: 42px 7%;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
-    .movie-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 22px;
-    }
-
-    .movie-card {
-      min-height: 285px;
-      border-radius: 18px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      cursor: pointer;
-      transition: 0.25s;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-    }
-
-    .movie-card:hover {
-      transform: translateY(-7px) scale(1.02);
-    }
-
-    .movie-card h3 {
-      font-size: 23px;
-      margin-bottom: 8px;
-    }
-
-    .movie-card p {
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .pink {
-      background: linear-gradient(145deg, #ff4d8d, #6a11cb);
-    }
-
-    .blue {
-      background: linear-gradient(145deg, #007cf0, #00dfd8);
-    }
-
-    .orange {
-      background: linear-gradient(145deg, #ff512f, #f09819);
-    }
-
-    .green {
-      background: linear-gradient(145deg, #11998e, #38ef7d);
-    }
-
-    .purple {
-      background: linear-gradient(145deg, #7928ca, #ff0080);
-    }
-
-    .detail {
-      display: none;
-      margin-top: 45px;
-      padding: 30px;
-      background: #1b1b24;
-      border: 1px solid #30303d;
-      border-radius: 20px;
-    }
-
-    .detail.active {
-      display: block;
-    }
-
-    .detail h2 {
-      color: #ff6aa2;
-    }
-
-    .detail-text {
-      color: #cfcfd6;
-      line-height: 1.7;
-    }
-
-    .suggestions {
-      margin: 25px 0;
-    }
-
-    .suggestions span {
-      display: inline-block;
-      background: #30303d;
-      margin: 5px;
-      padding: 9px 14px;
-      border-radius: 20px;
-      color: #f2f2f2;
-    }
-
-    .comment-box {
-      margin-top: 25px;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 100px;
-      padding: 15px;
-      border: 1px solid #3a3a48;
-      border-radius: 12px;
-      background: #111118;
-      color: white;
-      resize: vertical;
-      outline: none;
-    }
-
-    .comment-box button {
-      margin-top: 10px;
-      padding: 11px 20px;
-      border: none;
-      border-radius: 22px;
-      background: #ff4d8d;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .saved-comment {
-      margin-top: 18px;
-      padding: 15px;
-      background: #272731;
-      border-left: 4px solid #ff4d8d;
-      border-radius: 8px;
-      color: #ddd;
-    }
-
-    footer {
-      text-align: center;
-      color: #777;
-      padding: 35px;
-    }
-
-    @media (max-width: 600px) {
-      nav {
-        display: none;
-      }
-
-      .hero {
-        padding-top: 55px;
-        padding-bottom: 55px;
-      }
-
-      .movie-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 13px;
-      }
-
-      .movie-card {
-        min-height: 225px;
-        padding: 15px;
-      }
-
-      .movie-card h3 {
-        font-size: 19px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <header>
-    <div classlk="logo">Renkli Perde</div>
-    <nav>
-      <a href="#filmler">Filmler</a>
-      <a href="#filmler">Diziler</a>
-      <a href="#oneriler">Öneriler</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <h1>Bugün ne izlemek istersin?</h1>
-    <p>
-      Sevdiğin film ve dizileri seç, yorumunu yaz ve sana uygun yeni
-      yapımları keşfet.
-    </p>
-    <button onclick="rastgeleFilm()">Bana bir şey öner</button>
-  </section>
-
-  <main>
-    <section id="filmler">
-      <h2>Sevebileceğin yapımlar</h2>
-
-      <div class="movie-grid">
-        <article class="movie-card pink"
-          onclick="detayAc('La La Land', 'Hayaller, aşk ve seçimler üzerine renkli bir müzikal.', ['About Time', '500 Days of Summer', 'Whiplash'])">
-          <h3>La La Land</h3>
-          <p>Romantik • Müzikal</p>
-        </article>
-
-        <article class="movie-card blue"
-          onclick="detayAc('Interstellar', 'Uzay, zaman ve insan bağlarını anlatan bilim kurgu filmi.', ['Arrival', 'Inception', 'The Martian'])">
-          <h3>Interstellar</h3>
-          <p>Bilim Kurgu • Dram</p>
-        </article>
-
-        <article class="movie-card orange"
-          onclick="detayAc('The Devil Wears Prada', 'Moda dünyasında kariyer, değişim ve seçimler.', ['The Intern', 'Legally Blonde', 'Confessions of a Shopaholic'])">
-          <h3>The Devil Wears Prada</h3>
-          <p>Komedi • Dram</p>
-        </article>
-
-      <article class="movie-card green"
-      onclick="detayAc(
-      'Friends',
-      'Altı arkadaşın eğlenceli ve sıcak hikâyesi.',
-      ['How I Met Your Mother', 'New Girl', 'Brooklyn Nine-Nine']
-    )">
-
-  <img src="images/friends.jpg" alt="Friends dizisi posteri">
-
-  <h3>Friends</h3>
-  <p>Komedi • Dizi</p>
-</article>
-
-        <article class="movie-card purple"
-          onclick="detayAc('Black Mirror', 'Teknolojinin karanlık tarafını anlatan bağımsız hikâyeler.', ['Severance', 'Mr. Robot', 'Love Death + Robots'])">
-          <h3>Black Mirror</h3>
-          <p>Bilim Kurgu • Dizi</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="oneriler" class="detail">
-      <h2 id="detailTitle"></h2>
-      <p id="detailText" class="detail-text"></p>
-
-      <div class="suggestions">
-        <h3>Bunu sevdiysen bunları da sevebilirsin:</h3>
-        <div id="suggestionList"></div>
-      </div>
-
-      <div class="comment-box">
-        <h3>Yorumunu yaz</h3>
-        <textarea id="commentInput"
-          placeholder="Bu yapım hakkında ne düşünüyorsun?"></textarea>
-        <button onclick="yorumKaydet()">Yorumu kaydet</button>
-        <div id="savedComment"></div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    Renkli Perde • Dizi ve film keşif sitesi
-  </footer>
-
-  <script>
-    let seciliFilm = "";
-
-    function detayAc(baslik, aciklama, oneriler) {
-      seciliFilm = baslik;
-
-      document.getElementById("detailTitle").textContent = baslik;
-      document.getElementById("detailText").textContent = aciklama;
-
-      document.getElementById("suggestionList").innerHTML =
-        oneriler.map(film => <span>${film}</span>).join("");
-
-      const eskiYorum = localStorage.getItem("yorum-" + baslik);
-
-      document.getElementById("savedComment").innerHTML = eskiYorum
-        ? <div class="saved-comment">“${eskiYorum}”</div>
-        : "";
-
-      document.getElementById("commentInput").value = "";
-      document.getElementById("oneriler").classList.add("active");
-      document.getElementById("oneriler").scrollIntoView({
-        behavior: "smooth"
-      });
-    }
-
-    function yorumKaydet() {
-      const yorum = document.getElementById("commentInput").value.trim();
-
-      if (!seciliFilm) {
-        alert("Önce bir film veya dizi seç.");
-        return;
-      }
-
-      if (!yorum) {
-        alert("Lütfen bir yorum yaz.");
-        return;
-      }
-
-      localStorage.setItem("yorum-" + seciliFilm, yorum);
-
-      document.getElementById("savedComment").innerHTML =
-        <div class="saved-comment">“${yorum}”</div>;
-
-      document.getElementById("commentInput").value = "";
-    }
-
-    function rastgeleFilm() {
-      const kartlar = document.querySelectorAll(".movie-card");
-      const rastgele = Math.floor(Math.random() * kartlar.length);
-      kartlar[rastgele].click();
-    }
-  </script>
-
-</body>
-</html>
- kodu direkt düzenle ya style filan bulamadım
-
-Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağıdaki kodun tamamını yapıştır. Friends ve Black Mirror fotoğrafları eklendi; ayrıca classlk yazım hatası düzeltildi.
-
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Dizi & Film Dünyası</title>
+  <title>Renkli Perde</title>
 
   <style>
     * {
@@ -536,8 +52,8 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
       background:
         linear-gradient(
           90deg,
-          rgba(15, 15, 20, 0.9),
-          rgba(15, 15, 20, 0.2)
+          rgba(15, 15, 20, 0.85),
+          rgba(15, 15, 20, 0.15)
         ),
         linear-gradient(
           135deg,
@@ -563,13 +79,14 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
     .hero button {
       margin-top: 25px;
       padding: 13px 22px;
-      border: none;
-      border-radius: 25px;
       background: white;
       color: #111;
       font-size: 15px;
       font-weight: bold;
+      border: none;
+      border-radius: 25px;
       cursor: pointer;
+      transition: 0.2s;
     }
 
     .hero button:hover {
@@ -592,12 +109,12 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
     }
 
     .movie-card {
-      min-height: 320px;
-      padding: 20px;
+      min-height: 330px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       overflow: hidden;
+      background: #1b1b24;
       border-radius: 18px;
       cursor: pointer;
       transition: 0.25s;
@@ -609,22 +126,35 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
       box-shadow: 0 18px 35px rgba(0, 0, 0, 0.45);
     }
 
-    /* Film posterlerini düzenler */
     .movie-card img {
-      width: calc(100% + 40px);
+      width: 100%;
       height: 270px;
-      margin: -20px -20px 18px;
       display: block;
       object-fit: cover;
     }
 
-    .movie-card h3 {
-      margin-bottom: 8px;
-      font-size: 23px;
+    .movie-info {
+      min-height: 90px;
+      padding: 17px;
     }
 
-    .movie-card p {
-      color: rgba(255, 255, 255, 0.85);
+    .movie-info h3 {
+      margin-bottom: 8px;
+      font-size: 21px;
+    }
+
+    .movie-info p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+    }
+
+    .poster-placeholder {
+      height: 270px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      font-size: 55px;
     }
 
     .pink {
@@ -637,14 +167,6 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
 
     .orange {
       background: linear-gradient(145deg, #ff512f, #f09819);
-    }
-
-    .green {
-      background: linear-gradient(145deg, #11998e, #38ef7d);
-    }
-
-    .purple {
-      background: linear-gradient(145deg, #7928ca, #ff0080);
     }
 
     .detail {
@@ -722,7 +244,7 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
     }
 
     .comment-box button:hover {
-      background: #e93b7b;
+      background: #df3473;
     }
 
     .saved-comment {
@@ -756,22 +278,25 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
       }
 
       .movie-card {
-        min-height: 265px;
-        padding: 15px;
+        min-height: 275px;
       }
 
-      .movie-card img {
-        width: calc(100% + 30px);
+      .movie-card img,
+      .poster-placeholder {
         height: 210px;
-        margin: -15px -15px 14px;
       }
 
-      .movie-card h3 {
-        font-size: 18px;
+      .movie-info {
+        min-height: 85px;
+        padding: 13px;
       }
 
-      .movie-card p {
-        font-size: 14px;
+      .movie-info h3 {
+        font-size: 17px;
+      }
+
+      .movie-info p {
+        font-size: 13px;
       }
     }
   </style>
@@ -809,43 +334,55 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
       <div class="movie-grid">
 
         <article
-          class="movie-card pink"
+          class="movie-card"
           onclick="detayAc(
             'La La Land',
             'Hayaller, aşk ve seçimler üzerine renkli bir müzikal.',
             ['About Time', '500 Days of Summer', 'Whiplash']
           )"
         >
-          <h3>La La Land</h3>
-          <p>Romantik • Müzikal</p>
+          <div class="poster-placeholder pink">🎵</div>
+
+          <div class="movie-info">
+            <h3>La La Land</h3>
+            <p>Romantik • Müzikal</p>
+          </div>
         </article>
 
         <article
-          class="movie-card blue"
+          class="movie-card"
           onclick="detayAc(
             'Interstellar',
             'Uzay, zaman ve insan bağlarını anlatan bilim kurgu filmi.',
             ['Arrival', 'Inception', 'The Martian']
           )"
         >
-          <h3>Interstellar</h3>
-          <p>Bilim Kurgu • Dram</p>
+          <div class="poster-placeholder blue">🚀</div>
+
+          <div class="movie-info">
+            <h3>Interstellar</h3>
+            <p>Bilim Kurgu • Dram</p>
+          </div>
         </article>
 
         <article
-          class="movie-card orange"
+          class="movie-card"
           onclick="detayAc(
             'The Devil Wears Prada',
             'Moda dünyasında kariyer, değişim ve seçimler.',
             ['The Intern', 'Legally Blonde', 'Confessions of a Shopaholic']
           )"
         >
-          <h3>The Devil Wears Prada</h3>
-          <p>Komedi • Dram</p>
+          <div class="poster-placeholder orange">👠</div>
+
+          <div class="movie-info">
+            <h3>The Devil Wears Prada</h3>
+            <p>Komedi • Dram</p>
+          </div>
         </article>
 
         <article
-          class="movie-card green"
+          class="movie-card"
           onclick="detayAc(
             'Friends',
             'Altı arkadaşın eğlenceli ve sıcak hikâyesi.',
@@ -857,12 +394,14 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
             alt="Friends dizisi posteri"
           >
 
-          <h3>Friends</h3>
-          <p>Komedi • Dizi</p>
+          <div class="movie-info">
+            <h3>Friends</h3>
+            <p>Komedi • Dizi</p>
+          </div>
         </article>
 
         <article
-          class="movie-card purple"
+          class="movie-card"
           onclick="detayAc(
             'Black Mirror',
             'Teknolojinin karanlık tarafını anlatan bağımsız hikâyeler.',
@@ -874,8 +413,10 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
             alt="Black Mirror dizisi posteri"
           >
 
-          <h3>Black Mirror</h3>
-          <p>Bilim Kurgu • Dizi</p>
+          <div class="movie-info">
+            <h3>Black Mirror</h3>
+            <p>Bilim Kurgu • Dizi</p>
+          </div>
         </article>
 
       </div>
@@ -918,8 +459,11 @@ Tamam, kodu doğrudan düzenledim. index.html içindeki her şeyi silip aşağı
     function detayAc(baslik, aciklama, oneriler) {
       seciliFilm = baslik;
 
-      document.getElementById("detailTitle").textContent = baslik;
-      document.getElementById("detailText").textContent = aciklama;
+      document.getElementById("detailTitle").textContent =
+        baslik;
+
+      document.getElementById("detailText").textContent =
+        aciklama;
 
       document.getElementById("suggestionList").innerHTML =
         oneriler
